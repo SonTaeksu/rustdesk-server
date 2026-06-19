@@ -1,8 +1,12 @@
-> **🔧 Fork 안내** — 이 저장소는 [rustdesk-server](https://github.com/rustdesk/rustdesk-server)의 fork입니다. 라이선스는 원본과 동일한 **AGPL-3.0**([LICENSE](LICENSE)).
+> **🔧 HUEN fork — 핵심: WebSocket으로 방화벽 포트 개방 없는 원격지원 (서버는 앞단 reverse proxy 필수)**
 >
-> **주요 변경점:** `src/rendezvous_server.rs`에 **WebSocket 피제어 호스트 지원** 추가 — WS로 PK 등록 / 연결요청(punch-hole) push / 온라인 상태 응답 / ID 변경 가용성 체크 / 15초 keepalive 하트비트. 아웃바운드 443만 열리는 망에서 reverse proxy(WSS)로 원격지원이 되게 함.
+> [rustdesk-server](https://github.com/rustdesk/rustdesk-server)의 fork입니다 (License **AGPL-3.0**, [LICENSE](LICENSE)).
 >
-> 수정·빌드·배포 상세 + 상담원용 M365 키 게이트·다운로드 페이지: **[BUILD-HUEN.md](BUILD-HUEN.md)** · **[deploy/](deploy/README.md)**.
+> **★ 주 기능 — WebSocket 피제어 호스트 지원** (`src/rendezvous_server.rs`): 피제어 PC가 **WSS(443)** 로 등록·연결요청 수신·온라인표시·ID변경까지 처리됩니다. 덕분에 고객은 **방화벽 포트(21115-21119·UDP)를 열 필요 없이** 아웃바운드 443만으로 원격지원을 받습니다. (stock은 전용 포트/UDP 필요)
+>
+> ⚠️ **서버는 반드시 앞단에 reverse proxy(예: Nginx Proxy Manager)를 두어야 합니다** — hbbs/hbbr 자체는 TLS/443을 처리하지 않으므로, reverse proxy가 **WSS/443을 종단해 hbbs/hbbr의 WS 포트(21118/21119)로 프록시**해야 동작합니다. 설정은 [deploy/](deploy/README.md).
+>
+> WS 변경 상세(PK 등록·punch-hole push·OnlineResponse·15s keepalive) + 빌드·배포 + 상담원용 M365 키 게이트/다운로드 페이지: **[BUILD-HUEN.md](BUILD-HUEN.md)** · **[deploy/](deploy/README.md)**.
 
 ---
 
