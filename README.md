@@ -1,3 +1,11 @@
+> **🔧 Fork 안내** — 이 저장소는 [rustdesk-server](https://github.com/rustdesk/rustdesk-server)의 fork입니다. 라이선스는 원본과 동일한 **AGPL-3.0**([LICENSE](LICENSE)).
+>
+> **주요 변경점:** `src/rendezvous_server.rs`에 **WebSocket 피제어 호스트 지원** 추가 — WS로 PK 등록 / 연결요청(punch-hole) push / 온라인 상태 응답 / ID 변경 가용성 체크 / 15초 keepalive 하트비트. 아웃바운드 443만 열리는 망에서 reverse proxy(WSS)로 원격지원이 되게 함.
+>
+> 수정·빌드·배포 상세 + 상담원용 M365 키 게이트·다운로드 페이지: **[BUILD-HUEN.md](BUILD-HUEN.md)** · **[deploy/](deploy/README.md)**.
+
+---
+
 # RustDesk Server Program
 
 [![build](https://github.com/rustdesk/rustdesk-server/actions/workflows/build.yaml/badge.svg)](https://github.com/rustdesk/rustdesk-server/actions/workflows/build.yaml)

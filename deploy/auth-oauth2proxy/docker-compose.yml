@@ -1,0 +1,37 @@
+# 상담원 페이지 서버측 M365 게이트 — oauth2-proxy 샘플.
+#
+#   [browser] → NPM(443/TLS) → oauth2-proxy(M365 인증) → staffweb(정적 상담원 페이지)
+#
+# 로그인 안 한 사용자는 oauth2-proxy가 M365로 리다이렉트 → 통과해야 staffweb 도달.
+# 실제 값은 .env 로 주입 (`.env.example` 복사). .env 는 커밋 금지.
+services:
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    restart: unless-stopped
+    command:
+      - --provider=oidc
+      - --oidc-issuer-url=https://login.microsoftonline.com/${AAD_TENANT}/v2.0
+      - --client-id=${AAD_CLIENT}
+      - --client-secret=${AAD_CLIENT_SECRET}
+      - --cookie-secret=${COOKIE_SECRET}            # openssl rand -base64 32
+      - --email-domain=${ALLOWED_DOMAIN}            # 예: yourcompany.com  (테넌트 전체 허용은 *)
+      - --redirect-url=https://${STAFF_HOST}/oauth2/callback
+      - --upstream=http://staffweb:80/
+      - --http-address=0.0.0.0:4180
+      - --reverse-proxy=true                        # NPM 뒤에 있음
+      - --cookie-secure=true
+      - --skip-provider-button=true                 # 바로 M365로
+      - --scope=openid email profile
+    expose:
+      - "4180"
+    ports:
+      - "4180:4180"                                 # NPM → 이 포트로 프록시
+    depends_on:
+      - staffweb
+
+  # 인증 통과 후 제공할 정적 상담원 페이지. webroot의 상담원 index.html 을 ./staff-site/ 에 둔다.
+  staffweb:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./staff-site:/usr/share/nginx/html:ro

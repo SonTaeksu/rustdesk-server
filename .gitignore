@@ -10,3 +10,8 @@ src/version.rs
 db_v2.sqlite3
 test.*
 .idea
+# HUEN: 작업 백업 (커밋 제외)
+*.bak*
+# HUEN: oauth2-proxy 실제 시크릿 (커밋 금지)
+deploy/auth-oauth2proxy/.env
+deploy/auth-oauth2proxy/staff-site/

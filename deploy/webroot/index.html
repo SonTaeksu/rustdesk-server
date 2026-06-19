@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>원격 지원 다운로드</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.6 system-ui, "Segoe UI", sans-serif;
+           display: grid; place-items: center; min-height: 100vh;
+           background: #f4f5f7; color: #1c1e21; padding: 24px; }
+    main { width: 100%; max-width: 420px; background: #fff; border-radius: 16px;
+           padding: 32px; box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+    h1 { font-size: 1.5rem; margin: 0 0 8px; }
+    p { margin: 0 0 16px; color: #444; }
+    .dl { display: grid; gap: 12px; margin: 24px 0 8px; }
+    .dl a { display: block; text-align: center; text-decoration: none;
+            padding: 14px; border-radius: 10px; font-weight: 600;
+            background: #2563eb; color: #fff; }
+    .dl a.alt { background: #e8eaed; color: #1c1e21; }
+    .note { font-size: .875rem; color: #777; margin-top: 16px; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #18191a; color: #e4e6eb; }
+      main { background: #242526; box-shadow: none; }
+      p { color: #b0b3b8; } .dl a.alt { background: #3a3b3c; color: #e4e6eb; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>원격 지원 프로그램</h1>
+    <p>지원을 받으시려면 아래에서 프로그램을 받아 <b>실행</b>하세요.
+       실행하면 표시되는 <b>ID</b>와 <b>비밀번호</b>를 상담원에게 알려주시면 됩니다.</p>
+    <div class="dl">
+      <!-- 본인이 호스팅하는 고객용 빌드 URL로 교체 -->
+      <a href="&lt;CUSTOMER_WINDOWS_EXE_URL&gt;">Windows 다운로드</a>
+      <a class="alt" href="&lt;CUSTOMER_ANDROID_APK_URL&gt;">Android (APK) 다운로드</a>
+    </div>
+    <p class="note">설치 없이 바로 실행됩니다. 문제가 있으면 상담원에게 문의하세요.</p>
+  </main>
+</body>
+</html>

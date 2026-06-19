@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>상담원용 원격 지원 (내부)</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.6 system-ui, "Segoe UI", sans-serif;
+           display: grid; place-items: center; min-height: 100vh;
+           background: #f4f5f7; color: #1c1e21; padding: 24px; }
+    main { width: 100%; max-width: 440px; background: #fff; border-radius: 16px;
+           padding: 32px; box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+    h1 { font-size: 1.4rem; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .badge { font-size: .7rem; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+             background: #fde68a; color: #7c4a03; }
+    p { margin: 0 0 16px; color: #444; }
+    .dl { display: grid; gap: 12px; margin: 24px 0 8px; }
+    .dl a { display: block; text-align: center; text-decoration: none;
+            padding: 14px; border-radius: 10px; font-weight: 600;
+            background: #0a6734; color: #fff; }
+    .dl a.alt { background: #e8eaed; color: #1c1e21; }
+    .warn { font-size: .85rem; color: #b91c1c; margin-top: 16px; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #18191a; color: #e4e6eb; }
+      main { background: #242526; box-shadow: none; }
+      p { color: #b0b3b8; } .dl a.alt { background: #3a3b3c; color: #e4e6eb; }
+      .warn { color: #f87171; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>상담원용 원격 지원 <span class="badge">내부</span></h1>
+    <p>이 페이지는 <b>내부 직원용</b>입니다. 프로그램 실행 후
+       <b>회사 계정(M365) 로그인</b>을 거쳐야 사용할 수 있습니다.</p>
+    <div class="dl">
+      <!-- 본인이 호스팅하는 상담원용 빌드 URL로 교체 -->
+      <a href="&lt;STAFF_WINDOWS_EXE_URL&gt;">Windows (상담원용) 다운로드</a>
+      <a class="alt" href="&lt;STAFF_ANDROID_APK_URL&gt;">Android (상담원용) 다운로드</a>
+    </div>
+    <p class="warn">⚠️ 이 URL은 외부에 공유하지 마세요.</p>
+  </main>
+</body>
+</html>
