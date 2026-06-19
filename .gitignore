@@ -15,3 +15,7 @@ test.*
 # HUEN: oauth2-proxy 실제 시크릿 (커밋 금지)
 deploy/auth-oauth2proxy/.env
 deploy/auth-oauth2proxy/staff-site/
+# HUEN: compose 실제값(.env) + 서버키/DB(data) + 다운로드 바이너리 (커밋 금지)
+deploy/.env
+deploy/data/
+deploy/webroot/downloads/

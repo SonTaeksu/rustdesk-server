@@ -1,0 +1,74 @@
+# RustDesk 서버 (hbbs + hbbr) — 샘플 docker-compose.
+# TLS/WSS/인증서는 외부 reverse proxy(예: Nginx Proxy Manager)가 처리합니다.
+#
+# 흐름: client --wss://<your-domain> (443)--> [reverse proxy: TLS 종단 + 경로 라우팅]
+#          --> /ws/id    -> hbbs:21118  (rendezvous, WebSocket)
+#          --> /ws/relay -> hbbr:21119  (relay, WebSocket)
+#
+# 인터넷에 여는 포트는 reverse proxy의 443 뿐.
+# hbbs/hbbr의 WS 포트(21118/21119)는 reverse proxy만 닿게 하세요 (인터넷 노출 금지).
+#
+# ★ 실제 값(도메인 / 서버키 / AAD / 레지스트리)은 git에 안 올리는 `.env`에서 옵니다.
+#   `.env.example` 복사 → `.env` 채우기. 이 파일에 값을 하드코딩하지 마세요.
+
+services:
+  rustdesk-hbbs:
+    image: ${RUSTDESK_IMAGE:-rustdesk/rustdesk-server:latest}
+    container_name: rustdesk-hbbs
+    command: hbbs -r ${RUSTDESK_DOMAIN}
+    environment:
+      - ALWAYS_USE_RELAY=Y          # P2P 차단 → 무조건 릴레이 (방화벽 뒤 클라이언트용)
+    volumes:
+      - ./data:/root                # id_ed25519(서버 키) + sqlite db  ← .gitignore
+    # 네이티브(비-WSS) 클라이언트도 직접 받을 때만 개방 (방화벽 포트 개방 필요 → WSS-only 설계 무력화):
+    # ports:
+    #   - "21115:21115"
+    #   - "21116:21116"
+    #   - "21116:21116/udp"
+    depends_on: [rustdesk-hbbr]
+    restart: unless-stopped
+
+  rustdesk-hbbr:
+    image: ${RUSTDESK_IMAGE:-rustdesk/rustdesk-server:latest}
+    container_name: rustdesk-hbbr
+    command: hbbr
+    volumes:
+      - ./data:/root
+    restart: unless-stopped
+
+  # 고객(공개) + 상담원(숨김) 다운로드 페이지 — deploy/webroot/ 참고
+  rustdesk-download:
+    image: nginx:alpine
+    container_name: rustdesk-download
+    volumes:
+      - ./webroot:/usr/share/nginx/html:ro    # 실제 빌드 바이너리(downloads/)는 .gitignore
+    restart: unless-stopped
+
+  # M365(Entra) 키 발급 게이트 — deploy/authconfig/ 참고
+  rustdesk-authconfig:
+    build: ./authconfig                        # 또는: image: ${AUTHCONFIG_IMAGE}
+    container_name: rustdesk-authconfig
+    environment:
+      # 변수명은 사용하는 게이트 이미지에 맞추세요 (이 샘플의 deploy/authconfig/app.py 기준)
+      - AAD_TENANT=${AAD_TENANT}
+      - AAD_CLIENT=${AAD_CLIENT}
+      - RUSTDESK_KEY=${RUSTDESK_KEY}
+      - ALLOWED_DOMAIN=${ALLOWED_DOMAIN:-}     # (선택) 허용 이메일 도메인
+    restart: unless-stopped
+
+# reverse proxy 라우팅 (NPM/Nginx에서 설정; 이 compose 밖):
+#   https://<your-domain>/ws/id       -> rustdesk-hbbs:21118     (WebSocket)
+#   https://<your-domain>/ws/relay    -> rustdesk-hbbr:21119     (WebSocket)
+#   https://<your-domain>/            -> rustdesk-download:80
+#   https://<your-domain>/authconfig/ -> rustdesk-authconfig:8000
+#
+# [더 안전 — 호스트 포트 노출 0] reverse proxy도 도커면, 위 서비스들을 proxy의 외부 네트워크에
+# 붙이고 service 이름(rustdesk-hbbs:21118 / rustdesk-hbbr:21119)으로 프록시하세요:
+#   networks:
+#     default:
+#       external: true
+#       name: <reverse-proxy가 쓰는 네트워크 이름>
+
+networks:
+  default:
+    name: ${COMPOSE_NETWORK:-rustdesk-net}

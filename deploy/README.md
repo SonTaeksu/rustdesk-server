@@ -4,16 +4,19 @@ hbbs/hbbr(Rust)와 **별개**로, 클라이언트 배포와 상담원용 키 발
 
 > ⚠️ 전부 **샘플/템플릿**입니다. 실제 도메인·서버키·다운로드 링크·숨김경로는 **저장소에 두지 말고** 배포 시 환경변수/리네임으로 주입하세요.
 
+**전체 스택**은 [`docker-compose.example.yml`](docker-compose.example.yml) (+ [`.env.example`](.env.example))로 한 번에 띄웁니다 — hbbs/hbbr + 다운로드 페이지 + M365 게이트. 도메인·서버키·AAD·레지스트리 같은 실제 값은 gitignore되는 `.env`에서 주입(파일엔 `${VAR}` placeholder만).
+
 ```
 deploy/
-├─ authconfig/                      # M365 인증 게이트 (Flask 샘플)
-│  ├─ app.py
-│  ├─ requirements.txt
-│  └─ Dockerfile
-└─ webroot/
-   ├─ index.html                    # 고객용 다운로드 (공개)
-   └─ __RENAME_TO_SECRET_PATH__/    # 상담원용 다운로드 (숨김 경로)
-      └─ index.html
+├─ docker-compose.example.yml        # 전체 스택 샘플 (hbbs/hbbr + 다운로드 + 게이트)
+├─ .env.example                      # 실제값 템플릿 (→ .env, gitignore)
+├─ authconfig/                       # M365 인증 게이트 (Flask 샘플): app.py · Dockerfile · requirements.txt
+├─ webroot/
+│  ├─ index.html                     # 고객용 다운로드 (공개)
+│  └─ __RENAME_TO_SECRET_PATH__/     # 상담원용 다운로드 (숨김 경로)
+│     ├─ index.html                  #   숨김경로만
+│     └─ index.msal.html             #   + MSAL.js 로그인 월
+└─ auth-oauth2proxy/                 # 상담원 페이지 서버측 게이트 (oauth2-proxy): compose · .env.example · README
 ```
 
 ---
