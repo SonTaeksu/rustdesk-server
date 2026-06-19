@@ -10,6 +10,7 @@ hbbs/hbbr(Rust)와 **별개**로, 클라이언트 배포와 상담원용 키 발
 deploy/
 ├─ docker-compose.example.yml        # 전체 스택 샘플 (hbbs/hbbr + 다운로드 + 게이트)
 ├─ .env.example                      # 실제값 템플릿 (→ .env, gitignore)
+├─ reverse-proxy.example.conf        # Nginx Proxy Manager 샘플 (WSS/443 종단 + 경로 라우팅)
 ├─ authconfig/                       # M365 인증 게이트 (Flask 샘플): app.py · Dockerfile · requirements.txt
 ├─ webroot/
 │  ├─ index.html                     # 고객용 다운로드 (공개)
